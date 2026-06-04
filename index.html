@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>TelecelAid - Powered by Telecel Ghana</title>
     <style>
         * {
@@ -14,123 +14,240 @@
         body {
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             color: #333;
-            line-height: 1.6;
+            line-height: 1.5;
             overflow-x: hidden;
         }
 
         :root {
             --telecel-red: #E2001A;
             --telecel-red-dark: #B80015;
-            --telecel-red-light: #FFE5E8;
             --dark: #1a1a2e;
             --gray: #6c757d;
             --light-gray: #f8f9fa;
-            --border: #e9ecef;
-            --success: #00875A;
-            --shadow: 0 10px 40px rgba(0,0,0,0.08);
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow: 0 10px 25px rgba(0,0,0,0.08);
         }
 
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
+        /* Hero Section - NO OVERLAY, images fully visible */
         .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
             overflow: hidden;
         }
 
-        .hero::before {
-            content: '';
+        /* Background Slideshow - Fully Visible */
+        .hero-bg {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(226,0,26,0.9), rgba(0,0,0,0.7));
-            z-index: 1;
+            z-index: 0;
         }
 
+        .bg-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .bg-slide.active {
+            opacity: 1;
+        }
+
+        /* NO OVERLAY - removed completely */
+
+        /* Content on top - with text shadow for readability */
         .hero-content {
             position: relative;
             z-index: 2;
-            padding: 4rem 2rem 6rem;
-            max-width: 1280px;
+            padding: 5rem 1rem 4rem;
+            width: 100%;
+            max-width: 600px;
             margin: 0 auto;
+            text-align: center;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+        /* Text with shadow so it pops on any image */
+        .hero-badge {
+            background: rgba(226,0,26,0.9);
+            color: white;
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(5px);
         }
 
+        .hero-title {
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
+            color: white;
+            line-height: 1.3;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .hero-title span {
+            color: #FFD700;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .hero-desc {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.3);
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            backdrop-filter: blur(4px);
+        }
+
+        /* CTA Button */
+        .cta-primary {
+            display: block;
+            background: var(--telecel-red);
+            color: white;
+            padding: 0.9rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Trust Badges - with background for readability */
+        .trust-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .trust-badge {
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            padding: 0.4rem 0.8rem;
+            border-radius: 50px;
+            color: white;
+            font-size: 0.7rem;
+        }
+
+        /* Stats */
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .stat-number {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #FFD700;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* Countdown */
+        .countdown {
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            border-radius: 50px;
+            padding: 0.6rem 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .countdown-label {
+            color: white;
+            font-size: 0.75rem;
+        }
+
+        .countdown-timer {
+            color: #FFD700;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
         @keyframes pulse {
             0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(226,0,26,0.7); }
-            50% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(226,0,26,0); }
+            50% { transform: scale(1.03); box-shadow: 0 0 0 10px rgba(226,0,26,0); }
         }
 
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(10px); }
+            50% { transform: translateY(8px); }
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 1.2rem;
-            }
-        }
-
+        /* Navigation */
         .navbar {
-            background: rgba(255,255,255,0.95);
+            background: rgba(0,0,0,0.8);
             backdrop-filter: blur(10px);
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             z-index: 1000;
-            box-shadow: var(--shadow-sm);
+            padding: 0.5rem 0;
         }
 
         .nav-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 2rem;
-            max-width: 1280px;
-            margin: 0 auto;
+            padding: 0.5rem 1rem;
+            max-width: 100%;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .logo-icon {
             background: var(--telecel-red);
             color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: bold;
         }
 
         .logo-text {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 800;
-            color: var(--dark);
+            color: white;
         }
 
         .logo-text span {
@@ -138,247 +255,53 @@
         }
 
         .powered {
-            font-size: 0.75rem;
-            color: var(--gray);
-            margin-top: -0.2rem;
+            font-size: 0.6rem;
+            color: #ccc;
+            margin-top: -0.15rem;
+        }
+
+        .menu-toggle {
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+            padding: 0.5rem;
         }
 
         .nav-links {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.95);
+            padding: 1rem;
+            gap: 1rem;
+        }
+
+        .nav-links.active {
             display: flex;
-            gap: 2rem;
-            align-items: center;
         }
 
         .nav-links a {
             text-decoration: none;
-            color: var(--dark);
+            color: white;
             font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--telecel-red);
+            padding: 0.5rem;
+            text-align: center;
         }
 
         .nav-cta {
             background: var(--telecel-red);
-            color: white !important;
-            padding: 0.6rem 1.5rem;
             border-radius: 50px;
-            transition: background 0.3s !important;
-        }
-
-        .nav-cta:hover {
-            background: var(--telecel-red-dark) !important;
-            transform: translateY(-2px);
-        }
-
-        .menu-toggle {
-            display: none;
-            font-size: 1.8rem;
-            cursor: pointer;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 70px;
-                left: 0;
-                right: 0;
-                background: white;
-                padding: 2rem;
-                gap: 1.5rem;
-                box-shadow: var(--shadow);
-            }
-            .nav-links.active {
-                display: flex;
-            }
-            .menu-toggle {
-                display: block;
-            }
-        }
-
-        .hero-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-        }
-
-        .hero-badge {
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
-            color: white;
-            display: inline-block;
-            padding: 0.5rem 1.2rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero-title {
-            font-size: 3.2rem;
-            margin-bottom: 1rem;
-            color: white;
-            line-height: 1.2;
-        }
-
-        .hero-title span {
-            color: #FFD700;
-        }
-
-        .hero-desc {
-            color: rgba(255,255,255,0.9);
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
-        }
-
-        .cta-group {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .cta-primary {
-            display: inline-block;
-            background: var(--telecel-red);
-            color: white;
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-            animation: pulse 2s infinite;
-        }
-
-        .cta-primary:hover {
-            background: var(--telecel-red-dark);
-            transform: translateY(-2px);
-            animation: none;
-        }
-
-        .trust-badges {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .trust-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(5px);
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            color: white;
-            font-size: 0.85rem;
-        }
-
-        .stats-row {
-            display: flex;
-            gap: 2rem;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.2);
-            flex-wrap: wrap;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #FFD700;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.8);
-        }
-
-        .hero-illustration {
-            position: relative;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .floating-card {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 1rem;
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: all 0.3s;
-        }
-
-        .slideshow-wrapper {
-            position: relative;
-            min-height: 300px;
-            border-radius: 16px;
-            overflow: hidden;
-        }
-
-        .slide {
-            display: none;
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .slide.active {
-            display: block;
-        }
-
-        .slide-image {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 16px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .slide-caption {
-            margin-top: 0.8rem;
-            font-size: 0.85rem;
-            color: var(--telecel-red);
-            font-weight: 600;
-        }
-
-        .countdown {
-            background: rgba(0,0,0,0.5);
-            border-radius: 50px;
-            padding: 0.8rem 1.5rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .countdown-label {
-            color: white;
-            font-size: 0.85rem;
-        }
-
-        .countdown-timer {
-            color: #FFD700;
-            font-weight: 700;
-            font-size: 1.2rem;
-            font-family: monospace;
+            padding: 0.6rem !important;
         }
 
         .scroll-down {
             position: absolute;
-            bottom: 20px;
+            bottom: 15px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 2;
@@ -386,142 +309,100 @@
             color: white;
         }
 
-        .scroll-down span {
-            display: block;
-            font-size: 0.8rem;
-            margin-bottom: 0.5rem;
-        }
-
         .scroll-arrow {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             animation: bounce 2s infinite;
             cursor: pointer;
         }
 
-        .how-it-works {
-            padding: 5rem 0;
+        /* How It Works */
+        .how-it-works, .why-section {
+            padding: 3rem 1rem;
             background: white;
         }
 
         h2 {
-            font-size: 2.2rem;
-            margin-bottom: 2rem;
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
             text-align: center;
         }
 
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+        .steps, .benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
-        .step {
+        .step, .benefit-card {
+            background: var(--light-gray);
+            padding: 1.2rem;
+            border-radius: 20px;
             text-align: center;
-            padding: 2rem;
         }
 
         .step-number {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             background: var(--telecel-red);
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: bold;
-            margin: 0 auto 1rem;
-        }
-
-        .why-section {
-            background: var(--light-gray);
-            padding: 5rem 0;
-        }
-
-        .benefits {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
+            margin: 0 auto 0.8rem;
         }
 
         .benefit-card {
             background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: var(--shadow-sm);
-            transition: transform 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
-        .benefit-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
+        .benefit-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
         }
 
+        /* Footer */
         .footer {
             background: var(--dark);
             color: white;
-            padding: 3rem 0 2rem;
+            padding: 2rem 1rem 1.5rem;
+            text-align: center;
         }
 
         .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid #333;
+        .footer-grid a {
             color: #aaa;
-            font-size: 0.85rem;
+            text-decoration: none;
+            font-size: 0.8rem;
+            display: block;
+            margin: 0.3rem 0;
         }
 
         .whatsapp-float {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
+            bottom: 20px;
+            right: 20px;
             background: #25D366;
             color: white;
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            transition: all 0.3s;
-            z-index: 100;
+            font-size: 1.6rem;
             text-decoration: none;
-        }
-
-        .whatsapp-float:hover {
-            transform: scale(1.1);
-        }
-
-        @media (max-width: 768px) {
-            .hero-grid {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            .hero-title {
-                font-size: 2.2rem;
-            }
-            .trust-badges, .cta-group, .stats-row {
-                justify-content: center;
-            }
-            .countdown {
-                justify-content: center;
-            }
-            .slide-image {
-                height: 220px;
-            }
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 100;
         }
     </style>
 </head>
@@ -536,7 +417,7 @@
                     <div class="powered">Powered by Telecel Ghana</div>
                 </div>
             </div>
-            <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
             <div class="nav-links" id="navLinks">
                 <a href="index.html">Home</a>
                 <a href="#about">About</a>
@@ -548,146 +429,120 @@
     </nav>
 
     <section class="hero">
+        <!-- Background Rotating Images - FULLY VISIBLE -->
+        <div class="hero-bg" id="heroBg">
+            <div class="bg-slide active" style="background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1170&auto=format&fit=crop');"></div>
+            <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1687422809654-579d81c29d32?q=80&w=1112&auto=format&fit=crop');"></div>
+            <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1573497620053-ea5300f94f21?q=80&w=1170&auto=format&fit=crop');"></div>
+        </div>
+        
+        <!-- NO OVERLAY - images fully visible! -->
+        
         <div class="hero-content">
-            <div class="hero-grid">
-                <div>
-                    <div class="hero-badge">🎁 2026 Aid Program Now Open</div>
-                    <h1 class="hero-title">Giving Back to <span>Our Telecel Family</span></h1>
-                    <p class="hero-desc">TelecelAid provides financial support to Telecel Ghana subscribers in need. Apply today and get the help you deserve.</p>
-                    
-                    <div class="countdown">
-                        <span class="countdown-label">⏰ Application closes in:</span>
-                        <span class="countdown-timer" id="countdown">14d 05h 23m 12s</span>
-                    </div>
-                    
-                    <div class="cta-group">
-                        <a href="apply.html" class="cta-primary">Apply Now →</a>
-                    </div>
-                    
-                    <div class="trust-badges">
-                        <div class="trust-badge">✅ 100% Free</div>
-                        <div class="trust-badge">🔒 Secure Application</div>
-                        <div class="trust-badge">⭐ Official Telecel Program</div>
-                    </div>
-                    
-                    <div class="stats-row">
-                        <div class="stat-item">
-                            <div class="stat-number" id="counter1">0</div>
-                            <div class="stat-label">Beneficiaries</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number" id="counter2">0</div>
-                            <div class="stat-label">Disbursed (GHS)</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number" id="counter3">0</div>
-                            <div class="stat-label">Districts</div>
-                        </div>
-                    </div>
+            <div class="hero-badge">🎁 2026 Aid Program Now Open</div>
+            <h1 class="hero-title">Giving Back to <span>Our Telecel Family</span></h1>
+            <p class="hero-desc">TelecelAid provides financial support to Telecel Ghana subscribers in need.</p>
+            
+            <div class="countdown">
+                <span class="countdown-label">⏰ Closes in:</span>
+                <span class="countdown-timer" id="countdown">14d 05h 23m 12s</span>
+            </div>
+            
+            <a href="apply.html" class="cta-primary">Apply Now →</a>
+            
+            <div class="trust-badges">
+                <div class="trust-badge">✅ 100% Free</div>
+                <div class="trust-badge">🔒 Secure Application</div>
+                <div class="trust-badge">⭐ Official Program</div>
+            </div>
+            
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-number" id="counter1">0</div>
+                    <div class="stat-label">Beneficiaries</div>
                 </div>
-                
-                <div class="hero-illustration">
-                    <div class="floating-card">
-                        <div class="slideshow-wrapper" id="slideshow">
-                            <!-- Slide 1 - Fixed working image -->
-                            <div class="slide active">
-                                <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1169&auto=format&fit=crop" alt="Community Support" class="slide-image">
-                                <div class="slide-caption">🤝 Supporting Our Community</div>
-                            </div>
-                            <!-- Slide 2 -->
-                            <div class="slide">
-                                <img src="https://images.unsplash.com/photo-1687422809654-579d81c29d32?q=80&w=1112&auto=format&fit=crop" alt="Helping Hands" class="slide-image">
-                                <div class="slide-caption">❤️ Helping Those In Need</div>
-                            </div>
-                            <!-- Slide 3 -->
-                            <div class="slide">
-                                <img src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?q=80&w=1170&auto=format&fit=crop" alt="Together We Rise" class="slide-image">
-                                <div class="slide-caption">🌟 Together We Rise</div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="counter2">0</div>
+                    <div class="stat-label">Disbursed (GHS)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="counter3">0</div>
+                    <div class="stat-label">Districts</div>
                 </div>
             </div>
         </div>
         
         <div class="scroll-down">
-            <span>Scroll to learn more</span>
             <div class="scroll-arrow" onclick="scrollToNext()">▼</div>
         </div>
     </section>
 
     <section class="how-it-works" id="about">
-        <div class="container">
-            <h2>📊 How TelecelAid Works</h2>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-icon">📝</div>
-                    <h3>Apply Online</h3>
-                    <p>Fill out your details and requested amount.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-icon">🔐</div>
-                    <h3>Verify Your Number</h3>
-                    <p>Confirm your Telecel number ownership.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-icon">✅</div>
-                    <h3>Receive Support</h3>
-                    <p>Funds sent to your Telecel Cash wallet.</p>
-                </div>
+        <h2>📊 How It Works</h2>
+        <div class="steps" style="max-width:600px; margin:0 auto;">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-icon">📝</div>
+                <h3>Apply Online</h3>
+                <p>Fill out your details and requested amount.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-icon">🔐</div>
+                <h3>Verify Your Number</h3>
+                <p>Confirm your Telecel number ownership.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-icon">✅</div>
+                <h3>Receive Support</h3>
+                <p>Funds sent to your Telecel Cash wallet.</p>
             </div>
         </div>
     </section>
 
     <section class="why-section" id="why">
-        <div class="container">
-            <h2>💚 Why TelecelAid?</h2>
-            <div class="benefits">
-                <div class="benefit-card">
-                    <div class="benefit-icon">🔒</div>
-                    <h3>Secure Process</h3>
-                    <p>We never ask for your mobile money PIN.</p>
-                </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">⚡</div>
-                    <h3>Fast Disbursement</h3>
-                    <p>Approved funds sent within days.</p>
-                </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">🎯</div>
-                    <h3>Fair Opportunity</h3>
-                    <p>Equal consideration for all subscribers.</p>
-                </div>
+        <h2>💚 Why TelecelAid?</h2>
+        <div class="benefits" style="max-width:600px; margin:0 auto;">
+            <div class="benefit-card">
+                <div class="benefit-icon">🔒</div>
+                <h3>Secure Process</h3>
+                <p>We never ask for your mobile money PIN.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">⚡</div>
+                <h3>Fast Disbursement</h3>
+                <p>Approved funds sent within days.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">🎯</div>
+                <h3>Fair Opportunity</h3>
+                <p>Equal consideration for all.</p>
             </div>
         </div>
     </section>
 
     <footer class="footer" id="contact">
-        <div class="container">
-            <div class="footer-grid">
-                <div>
-                    <div style="font-size:1.5rem; font-weight:800;">📱 TelecelAid</div>
-                    <p>Giving back to our Telecel family across Ghana.</p>
-                </div>
-                <div>
-                    <h4>Quick Links</h4>
-                    <a href="index.html" style="color:#aaa; text-decoration:none; display:block;">Home</a>
-                    <a href="#about" style="color:#aaa; text-decoration:none; display:block;">About</a>
-                    <a href="#why" style="color:#aaa; text-decoration:none; display:block;">Why Us</a>
-                    <a href="apply.html" style="color:#aaa; text-decoration:none; display:block;">Apply Now</a>
-                </div>
-                <div>
-                    <h4>Contact Us</h4>
-                    <a href="tel:0800123456" style="color:#aaa; text-decoration:none; display:block;">📞 0800 123 456</a>
-                    <a href="mailto:support@telecelaid.com.gh" style="color:#aaa; text-decoration:none; display:block;">✉️ support@telecelaid.com.gh</a>
-                </div>
+        <div class="footer-grid" style="max-width:600px; margin:0 auto;">
+            <div>
+                <div style="font-size:1.2rem; font-weight:800;">📱 TelecelAid</div>
+                <p style="font-size:0.8rem;">Giving back to our Telecel family.</p>
             </div>
-            <div class="footer-bottom">
-                © 2026 TelecelAid | Powered by Telecel Ghana
+            <div>
+                <h4>Quick Links</h4>
+                <a href="index.html">Home</a>
+                <a href="#about">About</a>
+                <a href="#why">Why Us</a>
+                <a href="apply.html">Apply Now</a>
             </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="tel:0800123456">📞 0800 123 456</a>
+                <a href="mailto:support@telecelaid.com.gh">✉️ support@telecelaid.com.gh</a>
+            </div>
+        </div>
+        <div class="footer-bottom" style="max-width:600px; margin:0 auto;">
+            © 2026 TelecelAid | Powered by Telecel Ghana
         </div>
     </footer>
 
@@ -696,8 +551,18 @@
     </a>
 
     <script>
-        let slideIndex = 0;
-        let slideshowInterval;
+        let bgIndex = 0;
+        let bgInterval;
+        const bgSlides = document.querySelectorAll('.bg-slide');
+
+        function startBackgroundSlideshow() {
+            function nextBg() {
+                bgSlides[bgIndex].classList.remove('active');
+                bgIndex = (bgIndex + 1) % bgSlides.length;
+                bgSlides[bgIndex].classList.add('active');
+            }
+            bgInterval = setInterval(nextBg, 5000);
+        }
 
         function toggleMenu() {
             document.getElementById('navLinks').classList.toggle('active');
@@ -705,22 +570,6 @@
 
         function scrollToNext() {
             window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
-        }
-
-        function startSlideshow() {
-            const slides = document.querySelectorAll('.slide');
-            
-            function showSlide(index) {
-                slides.forEach(slide => slide.classList.remove('active'));
-                slides[index].classList.add('active');
-            }
-            
-            function nextSlide() {
-                slideIndex = (slideIndex + 1) % slides.length;
-                showSlide(slideIndex);
-            }
-            
-            slideshowInterval = setInterval(nextSlide, 4000);
         }
 
         function startCountdown() {
@@ -731,21 +580,16 @@
             function updateCountdown() {
                 const now = new Date();
                 const diff = targetDate - now;
-
                 if (diff <= 0) {
                     document.getElementById('countdown').innerHTML = "00d 00h 00m 00s";
                     return;
                 }
-
                 const days = Math.floor(diff / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((diff % (86400000)) / (3600000));
                 const minutes = Math.floor((diff % 3600000) / 60000);
                 const seconds = Math.floor((diff % 60000) / 1000);
-
-                document.getElementById('countdown').innerHTML = 
-                    `${days.toString().padStart(2, '0')}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+                document.getElementById('countdown').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
             }
-
             updateCountdown();
             setInterval(updateCountdown, 1000);
         }
@@ -756,21 +600,18 @@
                 { element: 'counter2', target: 2500000, isMoney: true },
                 { element: 'counter3', target: 50 }
             ];
-
             counters.forEach(counter => {
                 let current = 0;
-                const increment = Math.ceil(counter.target / 100);
+                const increment = Math.ceil(counter.target / 50);
                 const element = document.getElementById(counter.element);
-                
                 const interval = setInterval(() => {
                     current += increment;
                     if (current >= counter.target) {
                         current = counter.target;
                         clearInterval(interval);
                     }
-                    
                     if (counter.isMoney) {
-                        element.innerText = 'GHS ' + current.toLocaleString();
+                        element.innerText = 'GHS ' + (current / 1000).toFixed(0) + 'K';
                     } else {
                         element.innerText = current.toLocaleString() + '+';
                     }
@@ -786,19 +627,14 @@
                 }
             });
         });
-
         observer.observe(document.querySelector('.stats-row'));
         
         startCountdown();
-        startSlideshow();
+        startBackgroundSlideshow();
 
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('navLinks').classList.remove('active');
             });
         });
     </script>
